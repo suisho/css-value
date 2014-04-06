@@ -88,6 +88,18 @@ Parser.prototype.single = function(){
   }
 };
 
+Parser.prototype.url = function(){
+  var m = /^url\(([^)]*)\) */.exec(this.str);
+  if (!m) return m;
+  this.skip(m);
+  return {
+    type: 'url',
+    quote: "",
+    string: "url(" + m[1] + ")",
+    value: m[1]
+  }
+};
+
 Parser.prototype.string = function(){
   return this.single() || this.double();
 };
@@ -95,6 +107,7 @@ Parser.prototype.string = function(){
 
 Parser.prototype.value = function(){
   return this.number()
+    || this.url()
     || this.ident()
     || this.string()
     || this.comma();
